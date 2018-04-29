@@ -5,13 +5,6 @@
 #include "PROTEST.h"
 #include "PROTESTDlg.h"
 
-
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
-
 /////////////////////////////////////////////////////////////////////////////
 // CPROTESTApp
 
@@ -49,8 +42,7 @@ BOOL CPROTESTApp::InitInstance()
 	}
 	initial_draw(NULL);
 	AfxEnableControlContainer();
-// 	VERIFY( 1 == InitSkinMagicLib(AfxGetInstanceHandle(), NULL, NULL, NULL));
-// 	VERIFY( 1 == LoadSkinFile("corona.smf")); //载入皮肤文件，x-plus.smf可以更换。
+
 	// Standard initialization
 	// If you are not using these features and wish to reduce the size
 	//  of your final executable, you should remove from the following
@@ -86,7 +78,7 @@ int CPROTESTApp::ExitInstance()
 {
 	// TODO: Add your specialized code here and/or call the base class
 	deinitial_draw();
-//	ExitSkinMagicLib();
+
 	return CWinApp::ExitInstance();
 }
 LPDIRECTDRAWSURFACE7 CPROTESTApp::create_surface_rgb32(int width, int height)

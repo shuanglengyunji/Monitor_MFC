@@ -6,12 +6,6 @@
 #include "PROTESTDlg.h"
 #include "math.h"
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
-
 // BYTE image[720*576]={0};
 // BYTE image1[720*576]={0};
 // BYTE image2[720*576]={0};
@@ -95,30 +89,14 @@ BOOL CPROTESTDlg::OnInitDialog()
 {
 	CDialog::OnInitDialog();
 
-	// Add "About..." menu item to system menu.
-//   	VERIFY( 1 == SetWindowSkin( this->m_hWnd , "MainFrame" ));
-//   	VERIFY( 1 == SetDialogSkin( "Dialog" ) );
-	// IDM_ABOUTBOX must be in the system command range.
-	ASSERT((IDM_ABOUTBOX & 0xFFF0) == IDM_ABOUTBOX);
-	ASSERT(IDM_ABOUTBOX < 0xF000);
-
-	CMenu* pSysMenu = GetSystemMenu(FALSE);
-	if (pSysMenu != NULL)
-	{
-		CString strAboutMenu;
-		strAboutMenu.LoadString(IDS_ABOUTBOX);
-		if (!strAboutMenu.IsEmpty())
-		{
-			pSysMenu->AppendMenu(MF_SEPARATOR);
-			pSysMenu->AppendMenu(MF_STRING, IDM_ABOUTBOX, strAboutMenu);
-		}
-	}
 	// Set the icon for this dialog.  The framework does this automatically
 	//  when the application's main window is not a dialog
 	SetIcon(m_hIcon, TRUE);			// Set big icon
 	SetIcon(m_hIcon, FALSE);		// Set small icon
 	
 	// TODO: Add extra initialization here
+
+	//创建RecvPro线程，接收UDP图像
 	InitSocket();
 	RECVPARAM *pRecvParam=new RECVPARAM;
 	pRecvParam->sock=m_socket;
@@ -126,14 +104,11 @@ BOOL CPROTESTDlg::OnInitDialog()
 	HANDLE hThread=CreateThread(NULL,0,RecvPro,(LPVOID)pRecvParam,0,NULL);//RecvProc为线程函数	
 	CloseHandle(hThread);
 
-//	memset(image2,150,720*576);
-// 	CWnd *pWnd;
-// 	pWnd = GetDlgItem( IDC_DISPLAY );
-// 	pWnd->SetWindowPos( NULL,0,0,720,576,SWP_NOZORDER | SWP_NOMOVE );  //把编辑控件的大小设为(720,576)，位置不变
+	//在文本框里显示图像的宽度和高度
     SetDlgItemInt(IDC_PIC_ROW,1024);
 	SetDlgItemInt(IDC_PIC_COL,1025);
-
-
+	
+	//计算放大倍数
 	CRect rect; 
 	::GetWindowRect(m_hWnd,rect); 
 	ScreenToClient(rect); 
@@ -144,8 +119,9 @@ BOOL CPROTESTDlg::OnInitDialog()
 	m_nHeight = (float)(GetSystemMetrics(SM_CYSCREEN));
 	//计算放大倍数
 	m_Multiple_width = float(m_nWidth)/float(m_nDlgWidth); 
-	m_Mutiple_heith = float(m_nHeight)/float(m_nDlgHeight); 
+	m_Mutiple_heith = float(m_nHeight)/float(m_nDlgHeight);
 	change_flag=TRUE;//这个是成员变量bool形，用来判断onsize执行时oninitdlg是否已经执行了
+
 	return TRUE;  // return TRUE  unless you set the focus to a control
 }
 
@@ -225,7 +201,7 @@ DWORD WINAPI CPROTESTDlg::RecvPro(LPVOID lpParameter)
 	SOCKET sock=((RECVPARAM*)lpParameter)->sock;	
     HWND hwnd=((RECVPARAM*)lpParameter)->hwnd;
     delete lpParameter; //释放对象
-//	SOCKADDR_IN addrFrom;	
+//	SOCKADDR_IN addrFrom;
     int len=sizeof(SOCKADDR);	
     while(TRUE)   	
     {	
@@ -234,14 +210,14 @@ DWORD WINAPI CPROTESTDlg::RecvPro(LPVOID lpParameter)
  			recvfrom(sock,(char*)recvBuf,1024,0,(SOCKADDR*)&addrFrom,&len);
 			memcpy(imagedata1+m*1024,recvBuf,1024);
  		}                                                                           
-        ::PostMessage(hwnd,WM_RECVDATA,0,(LPARAM)tempBuf);//提交消息，触发消息响应            	
+        ::PostMessage(hwnd,WM_RECVDATA,0,(LPARAM)tempBuf);//提交消息，触发消息响应
     }
 	return 0;
 }
 
 LPARAM CPROTESTDlg::OnRecvData(WPARAM wParam, LPARAM lParam)
 {
-
+	//在IDC_DISPLAY上显示图像（根据imagedata1数组全部刷新图像）
 	((CPROTESTApp*)AfxGetApp())->do_blending(imagedata1,1024,1025,GetDlgItem(IDC_DISPLAY)->m_hWnd);
 			 
 	framelastnum++;
@@ -250,6 +226,8 @@ LPARAM CPROTESTDlg::OnRecvData(WPARAM wParam, LPARAM lParam)
 	RECVPIC=FALSE;
 	return 0;
 }
+
+//发送获取状态指令
  void CPROTESTDlg::OnSend() //获取状态
  {
  //  TODO: Add your control notification handler code here
@@ -283,6 +261,7 @@ void CPROTESTDlg::OnSize(UINT nType, int cx, int cy)
 	}
 }
 
+//自动计算并调整各控件大小（似乎并不成功）
 void CPROTESTDlg::ReSize(int nID)
 {
 	CRect Rect; 
@@ -303,6 +282,7 @@ void CPROTESTDlg::ReSize(int nID)
 	GetDlgItem(nID)->MoveWindow(Rect,TRUE); 
 }
 
+//读取一张图片（0.raw），然后显示出来
 void CPROTESTDlg::OnBtnShow() 
 {
 	// TODO: Add your control notification handler code here

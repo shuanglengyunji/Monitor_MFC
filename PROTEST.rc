@@ -153,10 +153,6 @@ END
 // String Table
 //
 
-STRINGTABLE
-BEGIN
-    IDS_ABOUTBOX            "关于 PROTEST(&A)..."
-END
 
 #endif    // 中文(简体，中国) resources
 /////////////////////////////////////////////////////////////////////////////
