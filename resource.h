@@ -1,9 +1,8 @@
 //{{NO_DEPENDENCIES}}
-// Microsoft Developer Studio generated include file.
-// Used by PROTEST.rc
+// Microsoft Visual C++ 生成的包含文件。
+// 供 PROTEST.rc 使用
 //
 #define IDM_ABOUTBOX                    0x0010
-#define IDD_ABOUTBOX                    100
 #define IDS_ABOUTBOX                    101
 #define IDD_PROTEST_DIALOG              102
 #define IDR_MAINFRAME                   128

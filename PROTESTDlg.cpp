@@ -50,50 +50,6 @@ float m_Multiple_width ;
 float m_Mutiple_heith ;
 
 /////////////////////////////////////////////////////////////////////////////
-// CAboutDlg dialog used for App About
-class CAboutDlg : public CDialog
-{
-public:
-	CAboutDlg();
-
-// Dialog Data
-	//{{AFX_DATA(CAboutDlg)
-	enum { IDD = IDD_ABOUTBOX };
-	//}}AFX_DATA
-
-	// ClassWizard generated virtual function overrides
-	//{{AFX_VIRTUAL(CAboutDlg)
-	protected:
-	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
-	//}}AFX_VIRTUAL
-
-// Implementation
-protected:
-	//{{AFX_MSG(CAboutDlg)
-	//}}AFX_MSG
-	DECLARE_MESSAGE_MAP()
-};
-
-CAboutDlg::CAboutDlg() : CDialog(CAboutDlg::IDD)
-{
-	//{{AFX_DATA_INIT(CAboutDlg)
-	//}}AFX_DATA_INIT
-}
-
-void CAboutDlg::DoDataExchange(CDataExchange* pDX)
-{
-	CDialog::DoDataExchange(pDX);
-	//{{AFX_DATA_MAP(CAboutDlg)
-	//}}AFX_DATA_MAP
-}
-
-BEGIN_MESSAGE_MAP(CAboutDlg, CDialog)
-	//{{AFX_MSG_MAP(CAboutDlg)
-		// No message handlers
-	//}}AFX_MSG_MAP
-END_MESSAGE_MAP()
-
-/////////////////////////////////////////////////////////////////////////////
 // CPROTESTDlg dialog
 
 CPROTESTDlg::CPROTESTDlg(CWnd* pParent /*=NULL*/)
@@ -197,9 +153,7 @@ void CPROTESTDlg::OnSysCommand(UINT nID, LPARAM lParam)
 {
 	if ((nID & 0xFFF0) == IDM_ABOUTBOX)
 	{
-		CAboutDlg dlgAbout;
 
-		dlgAbout.DoModal();
 	}
 	else
 	{
@@ -284,6 +238,7 @@ DWORD WINAPI CPROTESTDlg::RecvPro(LPVOID lpParameter)
     }
 	return 0;
 }
+
 LPARAM CPROTESTDlg::OnRecvData(WPARAM wParam, LPARAM lParam)
 {
 
@@ -327,6 +282,7 @@ void CPROTESTDlg::OnSize(UINT nType, int cx, int cy)
 		m_Mutiple_heith = float(1)/m_Mutiple_heith ; 
 	}
 }
+
 void CPROTESTDlg::ReSize(int nID)
 {
 	CRect Rect; 
@@ -347,23 +303,19 @@ void CPROTESTDlg::ReSize(int nID)
 	GetDlgItem(nID)->MoveWindow(Rect,TRUE); 
 }
 
-
 void CPROTESTDlg::OnBtnShow() 
 {
 	// TODO: Add your control notification handler code here
 
-		FILE *fp = fopen("0.raw","rb+");
-		 if(fp==NULL)
-		 {
-			 MessageBox("´ò¿ªÍ¼ÏñÊ§°Ü");
-		 }
-		 else
-		 {
-		  fread(imagedata1, 1,1024*1025, fp);
-		  
-		  ((CPROTESTApp*)AfxGetApp())->do_blending(imagedata1,1024,1025,GetDlgItem(IDC_DISPLAY)->m_hWnd);
-		  fclose(fp);
-		  
-		 }
-	
+	FILE *fp = fopen("0.raw","rb+");
+	if(fp==NULL)
+	{
+		MessageBox("´ò¿ªÍ¼ÏñÊ§°Ü");
+	}
+	else
+	{
+		fread(imagedata1, 1,1024*1025, fp);
+		((CPROTESTApp*)AfxGetApp())->do_blending(imagedata1,1024,1025,GetDlgItem(IDC_DISPLAY)->m_hWnd);
+		fclose(fp);
+	}
 }
