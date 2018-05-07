@@ -19,7 +19,6 @@ class CPROTESTDlg : public CDialog
 {
 // Construction
 public:
-	void ReSize(int nID);
 	static DWORD WINAPI RecvPro(LPVOID lpParameter);
 	BOOL InitSocket();
 	CPROTESTDlg(CWnd* pParent = NULL);	// standard constructor
@@ -28,9 +27,6 @@ public:
 	//{{AFX_DATA(CPROTESTDlg)
 	enum { IDD = IDD_PROTEST_DIALOG };
 
-	UINT	m_zhenhao;
-	UINT	m_imagecol;
-	UINT	m_imagerow;
 	//}}AFX_DATA
 
 	// ClassWizard generated virtual function overrides
@@ -49,9 +45,7 @@ protected:
 	afx_msg void OnSysCommand(UINT nID, LPARAM lParam);
 	afx_msg void OnPaint();
 	afx_msg HCURSOR OnQueryDragIcon();
-	afx_msg void OnSend();
 	afx_msg void OnSize(UINT nType, int cx, int cy);
-	afx_msg void OnBtnShow();
 	//}}AFX_MSG
 	afx_msg LPARAM OnRecvData(WPARAM wParam,LPARAM lParam);
 	DECLARE_MESSAGE_MAP()
