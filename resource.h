@@ -12,11 +12,11 @@
 #define IDC_PIC_ROW                     1031
 #define IDC_PIC_SIZE                    1031
 #define IDC_PIC_COL                     1032
+#define IDC_PIC_SIZE2                   1032
 #define IDC_FRAMENUM                    1035
 #define IDC_STATIC1                     1036
 #define IDC_STATIC5                     1040
 #define IDC_STATIC111                   1047
-#define IDC_STATIC_PictureSize          1047
 #define IDC_STATIC_SIZE                 1047
 #define IDC_STATIC112                   1048
 #define IDC_BUTTON1                     1049

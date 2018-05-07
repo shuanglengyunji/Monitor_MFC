@@ -73,16 +73,13 @@ BOOL CPROTESTDlg::OnInitDialog()
 	
 	// TODO: Add extra initialization here
 
-	//创建RecvPro线程，接收UDP图像
+	//创建UDP图像接收线程RecvPro
 	InitSocket();
 	RECVPARAM *pRecvParam=new RECVPARAM;
 	pRecvParam->sock=m_socket;
 	pRecvParam->hwnd=m_hWnd;
 	HANDLE hThread=CreateThread(NULL,0,RecvPro,(LPVOID)pRecvParam,0,NULL);//RecvProc为线程函数	
 	CloseHandle(hThread);
-
-	//在文本框里显示图像的宽度和高度
-	SetDlgItemText(IDC_PIC_SIZE, "1024 * 1024");
 	
 	//计算放大倍数
 	CRect rect;
@@ -204,6 +201,7 @@ LPARAM CPROTESTDlg::OnRecvData(WPARAM wParam, LPARAM lParam)
 	return 0;
 }
 
+//窗口大小变化时的响应函数
 void CPROTESTDlg::OnSize(UINT nType, int cx, int cy) 
 {
 	CDialog::OnSize(nType, cx, cy);	
