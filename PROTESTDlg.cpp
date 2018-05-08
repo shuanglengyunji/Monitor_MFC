@@ -236,8 +236,7 @@ void CPROTESTDlg::OnSize(UINT nType, int cx, int cy)
 void CPROTESTDlg::OnTimer(UINT_PTR nIDEvent)
 {
 	// TODO: 在此添加消息处理程序代码和/或调用默认值
-	// 周期为2s
-
+	
 	if (nIDEvent == 1)
 	{
 		int tmp;
@@ -250,7 +249,7 @@ void CPROTESTDlg::OnTimer(UINT_PTR nIDEvent)
 		else
 			tmp = framelastnum_now + (255 - framelastnum_old);
 
-		tmp = tmp / 2;
+		tmp = tmp / 2;	// 周期为2s
 
 		framelastnum_old = framelastnum_now;
 
