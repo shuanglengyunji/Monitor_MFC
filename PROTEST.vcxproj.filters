@@ -5,13 +5,16 @@
       <UniqueIdentifier>{67476d08-82ed-498d-b31a-b22a20bf5ad8}</UniqueIdentifier>
       <Extensions>cpp;c;cxx;rc;def;r;odl;idl;hpj;bat</Extensions>
     </Filter>
-    <Filter Include="Header Files">
-      <UniqueIdentifier>{a529dab2-46f0-4f28-897f-b47ed8006882}</UniqueIdentifier>
-      <Extensions>h;hpp;hxx;hm;inl</Extensions>
-    </Filter>
     <Filter Include="Resource Files">
       <UniqueIdentifier>{285ce23d-23b6-42ec-9957-d94de0b29605}</UniqueIdentifier>
       <Extensions>ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe</Extensions>
+    </Filter>
+    <Filter Include="Doc">
+      <UniqueIdentifier>{439574b7-f34e-4077-8f01-8463e47cf505}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{a529dab2-46f0-4f28-897f-b47ed8006882}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl</Extensions>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -47,7 +50,7 @@
       <Filter>Resource Files</Filter>
     </CustomBuild>
     <CustomBuild Include="ReadMe.txt">
-      <Filter>Source Files</Filter>
+      <Filter>Doc</Filter>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
@@ -57,7 +60,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="README.md">
-      <Filter>Source Files</Filter>
+      <Filter>Doc</Filter>
     </None>
   </ItemGroup>
 </Project>

@@ -6,26 +6,13 @@
 #include "PROTESTDlg.h"
 #include "math.h"
 
-SOCKADDR_IN addrFrom;	
+SOCKADDR_IN addrFrom;		//socket用的对象
 
-BYTE recvBuf[1024*1025];
-char tempBuf[10];
-unsigned short int image_row=0;
-unsigned short int image_col=0;
+char MessageBuf[10];		//存储WM_RECVDATA信号所携带的信息的buff
+BYTE recvBuf[1024];			//接收缓冲区
+BYTE imagedata[1024*1024];	//显示缓冲区
 
-BYTE imagedata1[1024*1025];//8bit上报图像数据
-
-int framelastnum=0;
-
-BOOL change_flag=FALSE;
-float m_nDlgWidth; 
-float m_nDlgHeight;
-//计算分辨率
-float m_nWidth ; 
-float m_nHeight;
-//计算放大倍数
-float m_Multiple_width ; 
-float m_Mutiple_heith ;
+int framelastnum=0;		//帧号
 
 /////////////////////////////////////////////////////////////////////////////
 // CPROTESTDlg dialog
@@ -80,19 +67,6 @@ BOOL CPROTESTDlg::OnInitDialog()
 	pRecvParam->hwnd=m_hWnd;
 	HANDLE hThread=CreateThread(NULL,0,RecvPro,(LPVOID)pRecvParam,0,NULL);//RecvProc为线程函数	
 	CloseHandle(hThread);
-	
-	//计算放大倍数
-	CRect rect;
-	::GetWindowRect(m_hWnd,rect);
-	ScreenToClient(rect);
-	m_nDlgWidth =(float) (rect.right - rect.left); 
-	m_nDlgHeight = (float)(rect.bottom - rect.top);
-	//计算分辨率
-	m_nWidth = (float)(GetSystemMetrics(SM_CXSCREEN)); 
-	m_nHeight = (float)(GetSystemMetrics(SM_CYSCREEN));
-	//计算放大倍数
-	m_Multiple_width = float(m_nWidth)/float(m_nDlgWidth); 
-	m_Mutiple_heith = float(m_nHeight)/float(m_nDlgHeight);
 
 	return TRUE;  // return TRUE  unless you set the focus to a control
 }
@@ -159,7 +133,7 @@ BOOL CPROTESTDlg::InitSocket()
 	addrSock.sin_port=htons(8000);
 	addrSock.sin_addr.S_un.S_addr=htonl(INADDR_ANY);
 	int retval;	
-	retval = bind(m_socket,(SOCKADDR*)&addrSock, sizeof(SOCKADDR));//SOCKADDR是sockaddr的宏定义
+	retval = bind(m_socket,(SOCKADDR*)&addrSock, sizeof(SOCKADDR));	//SOCKADDR是sockaddr的宏定义
 	if(SOCKET_ERROR==retval)
 	{
 		closesocket(m_socket);
@@ -172,30 +146,65 @@ BOOL CPROTESTDlg::InitSocket()
 //UDP数据接收线程
 DWORD WINAPI CPROTESTDlg::RecvPro(LPVOID lpParameter)
 {
+	//建立socket
 	SOCKET sock=((RECVPARAM*)lpParameter)->sock;	
     HWND hwnd=((RECVPARAM*)lpParameter)->hwnd;
     delete lpParameter;	//释放对象
 
     int len=sizeof(SOCKADDR);
+
+	//循环：接收内容+发送WM_RECVDATA消息
     while(TRUE)
-    {	
- 		for(int m=0;m<1024;m++)		//从原来的1025改为1024
+    {
+		//接收帧头
+		while(1)
+		{
+			//接收数据
+			recvfrom(sock, (char*)recvBuf, 4, 0, (SOCKADDR*)&addrFrom, &len);
+
+			//判断是否为帧头
+			if (recvBuf[0] != 0xAA)
+			{
+				continue;
+			}
+			if (recvBuf[1] != 0xBB)
+			{
+				continue;
+			}
+			if (recvBuf[2] != 0xCC)
+			{
+				continue;
+			}
+			if (recvBuf[3] != 0xDD)
+			{
+				continue;
+			}
+
+			//是帧头，则跳出循环
+			break;
+		}
+
+		//接收图像
+ 		for(int m=0;m<1024;m++)		//1024行
  		{
- 			recvfrom(sock,(char*)recvBuf,1024,0,(SOCKADDR*)&addrFrom,&len);
-			memcpy(imagedata1+m*1024,recvBuf,1024);
- 		}                                                                           
-        ::PostMessage(hwnd,WM_RECVDATA,0,(LPARAM)tempBuf);//提交消息，触发消息响应
+ 			recvfrom(sock,(char*)recvBuf,1024,0,(SOCKADDR*)&addrFrom,&len);	//每行1024字节
+			memcpy(imagedata+m*1024,recvBuf,1024);
+ 		}
+
+		//发送消息（接收到1024*1024）
+        ::PostMessage(hwnd,WM_RECVDATA,0,(LPARAM)MessageBuf);//提交消息，触发消息响应
     }
 	return 0;
 }
 
-//接收图像时的响应函数（根据imagedata1[]的内容绘制图像窗口）
+//绘制窗口
+//接收图像时的响应函数（根据imagedata[]的内容绘制图像窗口）
 LPARAM CPROTESTDlg::OnRecvData(WPARAM wParam, LPARAM lParam)
 {
-	//在IDC_DISPLAY上显示图像（根据imagedata1数组全部刷新图像）
-	((CPROTESTApp*)AfxGetApp())->do_blending(imagedata1,1024,1025,GetDlgItem(IDC_DISPLAY)->m_hWnd);
-			 
-	framelastnum++;				//帧号累加
+	//在IDC_DISPLAY上显示图像（根据imagedata数组全部刷新图像）
+	((CPROTESTApp*)AfxGetApp())->do_blending(imagedata,1024,1024,GetDlgItem(IDC_DISPLAY)->m_hWnd);
+	
+	framelastnum++;									//帧号累加
 	SetDlgItemInt(IDC_FRAMENUM,framelastnum);		//显示图像帧号
 
 	return 0;
@@ -207,11 +216,6 @@ void CPROTESTDlg::OnSize(UINT nType, int cx, int cy)
 	CDialog::OnSize(nType, cx, cy);	
 	// TODO: Add your message handler code here
 }
-
-
-
-
-
 
 ////发送获取状态指令
 // void CPROTESTDlg::OnSend() //获取状态
