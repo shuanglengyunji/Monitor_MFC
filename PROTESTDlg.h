@@ -52,6 +52,8 @@ protected:
 private:
 	CPoint m_ptOrigin;
 	SOCKET m_socket;
+public:
+	afx_msg void OnTimer(UINT_PTR nIDEvent);
 };
 
 //{{AFX_INSERT_LOCATION}}

@@ -79,10 +79,10 @@ CAPTION "图像显示"
 FONT 10, "宋体", 0, 0, 0x1
 BEGIN
     PUSHBUTTON      "",IDC_DISPLAY,10,20,198,184,BS_FLAT | WS_DISABLED | NOT WS_TABSTOP
-    LTEXT           "当前图像帧号：",IDC_STATIC5,10,9,53,8
-    LTEXT           "图像大小：",IDC_STATIC_SIZE,93,9,38,8
-    LTEXT           "1024 * 1024",IDC_PIC_SIZE,132,9,49,8
-    LTEXT           "0",IDC_FRAMENUM,59,9,30,8
+    LTEXT           "帧率：",IDC_STATIC5,10,9,23,8
+    LTEXT           "图像大小：",IDC_STATIC_SIZE,61,9,38,8
+    LTEXT           "1024 * 1024",IDC_PIC_SIZE,100,9,49,8
+    LTEXT           "0",IDC_FRAMENUM,34,9,23,8
 END
 
 

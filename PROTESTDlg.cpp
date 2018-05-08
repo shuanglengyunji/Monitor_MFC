@@ -12,7 +12,7 @@ char MessageBuf[10];		//存储WM_RECVDATA信号所携带的信息的buff
 BYTE recvBuf[1024];			//接收缓冲区
 BYTE imagedata[1024*1024];	//显示缓冲区
 
-int framelastnum=0;		//帧号
+UINT8 framelastnum=0;		//帧号(0-255)
 
 /////////////////////////////////////////////////////////////////////////////
 // CPROTESTDlg dialog
@@ -44,6 +44,7 @@ BEGIN_MESSAGE_MAP(CPROTESTDlg, CDialog)
 	ON_WM_SIZE()
 	//}}AFX_MSG_MAP
 	ON_MESSAGE(WM_RECVDATA,OnRecvData)
+	ON_WM_TIMER()
 END_MESSAGE_MAP()
 
 //////////////////////////////////////////////////////////////////////////
@@ -67,6 +68,9 @@ BOOL CPROTESTDlg::OnInitDialog()
 	pRecvParam->hwnd=m_hWnd;
 	HANDLE hThread=CreateThread(NULL,0,RecvPro,(LPVOID)pRecvParam,0,NULL);//RecvProc为线程函数	
 	CloseHandle(hThread);
+
+	// 创建帧率计算定时器
+	SetTimer(1, 2000, NULL);	//2s周期
 
 	return TRUE;  // return TRUE  unless you set the focus to a control
 }
@@ -205,7 +209,6 @@ LPARAM CPROTESTDlg::OnRecvData(WPARAM wParam, LPARAM lParam)
 	((CPROTESTApp*)AfxGetApp())->do_blending(imagedata,1024,1024,GetDlgItem(IDC_DISPLAY)->m_hWnd);
 	
 	framelastnum++;									//帧号累加
-	SetDlgItemInt(IDC_FRAMENUM,framelastnum);		//显示图像帧号
 
 	return 0;
 }
@@ -229,3 +232,31 @@ void CPROTESTDlg::OnSize(UINT nType, int cx, int cy)
 // 	sendto(m_socket,(char*)sendata,4,0,(SOCKADDR*)&addrFrom,sizeof(SOCKADDR));
 // }
 
+
+void CPROTESTDlg::OnTimer(UINT_PTR nIDEvent)
+{
+	// TODO: 在此添加消息处理程序代码和/或调用默认值
+	// 周期为2s
+
+	if (nIDEvent == 1)
+	{
+		int tmp;
+		int framelastnum_now = 0;
+		static int framelastnum_old = 0;
+
+		framelastnum_now = framelastnum;
+		if (framelastnum_now >= framelastnum_old)
+			tmp = framelastnum_now - framelastnum_old;
+		else
+			tmp = framelastnum_now + (255 - framelastnum_old);
+
+		tmp = tmp / 2;
+
+		framelastnum_old = framelastnum_now;
+
+		//显示图像帧率
+		SetDlgItemInt(IDC_FRAMENUM, tmp);
+	}
+
+	CDialog::OnTimer(nIDEvent);
+}
