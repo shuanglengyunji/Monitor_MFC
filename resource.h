@@ -23,6 +23,8 @@
 #define IDC_DISPLAY4                    1050
 #define IDC_DISPLAY3                    1051
 #define IDC_DISPLAY2                    1052
+#define IDC_IPADDRESS2                  1057
+#define IDC_IPADDRESS                   1057
 
 // Next default values for new objects
 // 
@@ -30,7 +32,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        136
 #define _APS_NEXT_COMMAND_VALUE         32771
-#define _APS_NEXT_CONTROL_VALUE         1052
+#define _APS_NEXT_CONTROL_VALUE         1058
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

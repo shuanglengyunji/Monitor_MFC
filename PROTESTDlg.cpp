@@ -62,6 +62,10 @@ BOOL CPROTESTDlg::OnInitDialog()
 	
 	// TODO: Add extra initialization here
 
+	CIPAddressCtrl * my_ip_tmp;
+	my_ip_tmp = (CIPAddressCtrl *)GetDlgItem(IDC_IPADDRESS);
+	my_ip_tmp->SetAddress(192, 168, 1, 136);
+
 	//创建UDP图像接收线程RecvPro
 	InitSocket();
 	RECVPARAM *pRecvParam=new RECVPARAM;
@@ -261,11 +265,23 @@ void CPROTESTDlg::OnTimer(UINT_PTR nIDEvent)
 	CDialog::OnTimer(nIDEvent);
 }
 
-
 void CPROTESTDlg::OnBnClickedGetImage()
 {
 	// TODO: 在此添加控件通知处理程序代码
+	SOCKADDR_IN addrTo;		//socket用的对象
+
+	//获取IP地址到DWORD
+	CIPAddressCtrl * my_ip;
+	DWORD dwIP;
+	my_ip = (CIPAddressCtrl *)GetDlgItem(IDC_IPADDRESS);
+	my_ip->GetAddress(dwIP);
+
+	//赋值给addrFrom.sin_addr
+	addrTo.sin_family = AF_INET;
+	addrTo.sin_addr.S_un.S_addr = htonl(dwIP);
+	addrTo.sin_port = htons(8000);
+	
 	BYTE sendata;
 	sendata = 0xAA;
-	sendto(m_socket,(char*)(&sendata),1,0,(SOCKADDR*)&addrFrom,sizeof(SOCKADDR));
+	sendto(m_socket,(char*)(&sendata),1,0,(SOCKADDR*)&addrTo,sizeof(SOCKADDR));
 }
