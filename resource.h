@@ -19,6 +19,7 @@
 #define IDC_STATIC_SIZE                 1047
 #define IDC_STATIC112                   1048
 #define IDC_BUTTON1                     1049
+#define IDC_Get_IMAGE                   1049
 #define IDC_DISPLAY4                    1050
 #define IDC_DISPLAY3                    1051
 #define IDC_DISPLAY2                    1052

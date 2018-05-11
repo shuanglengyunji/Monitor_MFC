@@ -45,6 +45,7 @@ BEGIN_MESSAGE_MAP(CPROTESTDlg, CDialog)
 	//}}AFX_MSG_MAP
 	ON_MESSAGE(WM_RECVDATA,OnRecvData)
 	ON_WM_TIMER()
+	ON_BN_CLICKED(IDC_Get_IMAGE, &CPROTESTDlg::OnBnClickedGetImage)
 END_MESSAGE_MAP()
 
 //////////////////////////////////////////////////////////////////////////
@@ -258,4 +259,13 @@ void CPROTESTDlg::OnTimer(UINT_PTR nIDEvent)
 	}
 
 	CDialog::OnTimer(nIDEvent);
+}
+
+
+void CPROTESTDlg::OnBnClickedGetImage()
+{
+	// TODO: 在此添加控件通知处理程序代码
+	BYTE sendata;
+	sendata = 0xAA;
+	sendto(m_socket,(char*)(&sendata),1,0,(SOCKADDR*)&addrFrom,sizeof(SOCKADDR));
 }

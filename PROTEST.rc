@@ -79,10 +79,11 @@ CAPTION "图像显示"
 FONT 10, "宋体", 0, 0, 0x1
 BEGIN
     PUSHBUTTON      "",IDC_DISPLAY,10,20,198,184,BS_FLAT | WS_DISABLED | NOT WS_TABSTOP
-    LTEXT           "帧率：",IDC_STATIC5,10,9,23,8
-    LTEXT           "图像大小：",IDC_STATIC_SIZE,61,9,38,8
-    LTEXT           "1024 * 1024",IDC_PIC_SIZE,100,9,49,8
-    LTEXT           "0",IDC_FRAMENUM,34,9,23,8
+    LTEXT           "帧率：",IDC_STATIC5,10,10,23,8
+    LTEXT           "图像大小：",IDC_STATIC_SIZE,61,10,38,8
+    LTEXT           "1024 * 1024",IDC_PIC_SIZE,99,10,49,8
+    LTEXT           "0",IDC_FRAMENUM,33,10,23,8
+    PUSHBUTTON      "获取图像",IDC_Get_IMAGE,172,6,36,13
 END
 
 
@@ -138,7 +139,7 @@ BEGIN
         RIGHTMARGIN, 208
         VERTGUIDE, 10
         VERTGUIDE, 209
-        TOPMARGIN, 9
+        TOPMARGIN, 6
         BOTTOMMARGIN, 204
         HORZGUIDE, 20
         HORZGUIDE, 147
@@ -158,6 +159,7 @@ IDD_PROTEST_DIALOG AFX_DIALOG_LAYOUT
 BEGIN
     0,
     0, 0, 100, 100,
+    0, 0, 0, 0,
     0, 0, 0, 0,
     0, 0, 0, 0,
     0, 0, 0, 0,
